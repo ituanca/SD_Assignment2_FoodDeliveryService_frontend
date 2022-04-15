@@ -4,15 +4,17 @@ import "./styles.css";
 import {Link, Outlet} from "react-router-dom";
 import {Button} from "react-bootstrap";
 import {Col} from "reactstrap";
+import axios from "axios";
 
 
 function SignUpAdmin(){
     const [errorMessagesAS, setErrorMessagesAS] = useState({});
     const [isSubmittedAS, setIsSubmittedAS] = useState(false);
     const [existentAdmins, setExistentAdmins] = useState( [] );
-    const [newUsername, setNewUsername] = useState( {} );
-    const [newPassword, setNewPassword] = useState( {} );
-    const [newRestaurant, setNewRestaurant] = useState( {} );
+    const [adminRegistration, setAdminRegistration] = useState({
+        username: "",
+        password: ""
+    });
 
     useEffect(() => {
         fetch('http://localhost:8080/assignment2/admin/index')
@@ -26,63 +28,31 @@ function SignUpAdmin(){
     }, []);
 
     const errors = {
-        uname: "username already exists",
+        username: "username already exists",
     };
 
-    const getUsername = (event) => {
-        const userValue = event.target.value;
-        setNewUsername(userValue);
+    const handleInput = (event) => {
+        const name = event.target.name;
+        const value = event.target.value;
+        setAdminRegistration({ ...adminRegistration, [name] : value});
     }
-
-    const getPassword = (event) => {
-        const passwordValue = event.target.value;
-        setNewPassword(passwordValue);
-    }
-
-    // const getRestaurant = (event) => {
-    //     const resValue = event.target.value;
-    //     console.log(resValue);
-    //     setNewPassword(resValue);
-    // }
-
-    // const data = {
-    //     username: newUsername,
-    //     password: newPassword
-    // }
-    //
-    // const requestOptions = {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify(data)
-    // };
 
     const handleSubmit = (event) => {
         // Prevent page reload
         event.preventDefault();
-        var {uname} = document.forms[0];
+        var {username} = document.forms[0];
 
-        const newUser = {newUsername, newPassword};
-        console.log(newUser);
-        console.log(JSON.stringify(newUser));
+        const userByUsername = existentAdmins.find((user) => user.username === adminRegistration.username);
 
-        // Find out if username exists
-        const userByUsername = existentAdmins.find((user) => user.username === uname.value);
-
-        // Compare user info
         if (userByUsername) {
-            // existent username
-            setErrorMessagesAS({name: "uname", message: errors.uname});
+            setErrorMessagesAS({name: "username", message: errors.username});
         } else {
-            // ok
             setIsSubmittedAS(true);
-            console.log(newUsername);
-            console.log(newPassword);
-            fetch('http://localhost:8080/assignment2/admin/create',{
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newUser)
-            })  .then(response => response.json())
-                .then(res => console.log(res));
+            console.log(JSON.parse(JSON.stringify(adminRegistration.username)));
+            console.log(JSON.parse(JSON.stringify(adminRegistration.password)));
+
+            axios.post('http://localhost:8080/assignment2/admin/create', adminRegistration)
+                .then(response => setAdminRegistration(response.data.id));
         }
     };
 
@@ -96,13 +66,19 @@ function SignUpAdmin(){
             <form onSubmit = {handleSubmit}>
                 <div className="input-container">
                     <label>Username </label>
-                    <input type="text" onChange={getUsername} name="uname" required />
-                    {renderErrorMessage("uname")}
+                    <input type="text"
+                           value={adminRegistration.username}
+                           onChange={handleInput}
+                           name="username" required id = "username"/>
+                    {renderErrorMessage("username")}
                 </div>
                 <div className="input-container">
                     <label>Password </label>
-                    <input type="password" onChange={getPassword} name="pass" required/>
-                    {renderErrorMessage("pass")}
+                    <input type="password"
+                           value={adminRegistration.password}
+                           onChange={handleInput}
+                           name="password" required id = "password"/>
+                    {renderErrorMessage("password")}
                 </div>
                 <div className="button-container">
                     <input type="submit"/>
@@ -122,6 +98,30 @@ function SignUpAdmin(){
                 </nav>
                 <Outlet />
             </div>
+
+            {/*<div>*/}
+            {/*    <ul>*/}
+            {/*        {existentAdmins.map(user => (*/}
+            {/*            <li key={user.id}>*/}
+            {/*                <p> {user.username}</p>*/}
+            {/*            </li>*/}
+            {/*        ))}*/}
+            {/*    </ul>*/}
+            {/*</div>*/}
+
+            {/*<div>*/}
+            {/*    {*/}
+            {/*        records.map((curEl) =>{*/}
+            {/*            const {id, username, password} = curEl;*/}
+            {/*            return (*/}
+            {/*                <div className="showDataStyle" key ={curEl.id}>*/}
+            {/*                    <p>{curEl.username}</p>*/}
+            {/*                    <p>{curEl.password}</p>*/}
+            {/*                </div>*/}
+            {/*            )*/}
+            {/*        })*/}
+            {/*    }*/}
+            {/*</div>*/}
         </div>
     );
 }

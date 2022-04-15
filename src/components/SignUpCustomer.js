@@ -4,12 +4,19 @@ import "./styles.css";
 import {Link, Outlet} from "react-router-dom";
 import {Button} from "react-bootstrap";
 import {Col} from "reactstrap";
+import axios from "axios";
 
 
 function SignUpCustomer(){
     const [errorMessagesSC, setErrorMessagesSC] = useState({});
     const [isSubmittedSC, setIsSubmittedSC] = useState(false);
     const [existentCustomers, setExistentCustomers] = useState( [] );
+    const [customerRegistration, setCustomerRegistration] = useState({
+        username: "",
+        password: "",
+        name: "",
+        email: ""
+    });
 
     useEffect(() => {
         fetch('http://localhost:8080/assignment2/customer/index')
@@ -23,34 +30,37 @@ function SignUpCustomer(){
     }, []);
 
     const errors = {
-        uname: "username already exists",
+        username: "username already exists",
         email: "email already exists"
     };
+
+    const handleInput = (event) => {
+        const name = event.target.name;
+        const value = event.target.value;
+        setCustomerRegistration({ ...customerRegistration, [name] : value});
+        //console.log(customerRegistration);
+    }
 
     const handleSubmit = (event) => {
         // Prevent page reload
         event.preventDefault();
-        var {uname, email} = document.forms[0];
 
-        // Find users info
-        const userByUsername = existentCustomers.find((user) => user.username === uname.value);
-        const userByEmail = existentCustomers.find((user) => user.email === email.value);
+        const userByUsername = existentCustomers.find((user) => user.username === customerRegistration.username);
+        const userByEmail = existentCustomers.find((user) => user.email === customerRegistration.email);
 
-        // Compare user info
         if (userByUsername) {
-            // existent username
-            setErrorMessagesSC({name: "uname", message: errors.uname});
+            setErrorMessagesSC({name: "username", message: errors.username});
         } else if(userByEmail){
-            // existent email
             setErrorMessagesSC({name: "email", message: errors.email});
         } else {
-            // ok
             setIsSubmittedSC(true);
+            axios.post('http://localhost:8080/assignment2/customer/create', customerRegistration)
+                .then(response => setCustomerRegistration(response.data.id));
         }
     };
 
-    const renderErrorMessage = (name) =>
-        name === errorMessagesSC.name && (
+    const renderErrorMessage = (nameErr) =>
+        nameErr === errorMessagesSC.name && (
             <div className="error">{errorMessagesSC.message}</div>
         );
 
@@ -59,23 +69,33 @@ function SignUpCustomer(){
             <form onSubmit = {handleSubmit}>
                 <div className="input-container">
                     <label>Name </label>
-                    <input type="text" name="name" required/>
-                    {renderErrorMessage("name")}
+                    <input type="text"
+                           value={customerRegistration.name}
+                           onChange={handleInput}
+                           name="name" required id = "name"/>
                 </div>
                 <div className="input-container">
                     <label>Email </label>
-                    <input type="text" name="email" required/>
+                    <input type="text"
+                           value={customerRegistration.email}
+                           onChange={handleInput}
+                           name="email" required id = "email"/>
                     {renderErrorMessage("email")}
                 </div>
                 <div className="input-container">
                     <label>Username </label>
-                    <input type="text" name="uname" required/>
-                    {renderErrorMessage("uname")}
+                    <input type="text"
+                           value={customerRegistration.username}
+                           onChange={handleInput}
+                           name="username" required id = "username"/>
+                    {renderErrorMessage("username")}
                 </div>
                 <div className="input-container">
                     <label>Password </label>
-                    <input type="text" name="email" required/>
-                    {renderErrorMessage("email")}
+                    <input type="text"
+                           value={customerRegistration.password}
+                           onChange={handleInput}
+                           name="password" required id = "password"/>
                 </div>
                 <div className="button-container">
                     <input type="submit"/>

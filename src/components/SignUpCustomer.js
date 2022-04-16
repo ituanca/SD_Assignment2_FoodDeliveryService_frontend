@@ -47,6 +47,8 @@ function SignUpCustomer(){
 
         const userByUsername = existentCustomers.find((user) => user.username === customerRegistration.username);
         const userByEmail = existentCustomers.find((user) => user.email === customerRegistration.email);
+        console.log(userByUsername);
+
 
         if (userByUsername) {
             setErrorMessagesSC({name: "username", message: errors.username});

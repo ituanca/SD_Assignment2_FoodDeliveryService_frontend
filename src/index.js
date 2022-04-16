@@ -9,6 +9,7 @@ import LogInAdmin from "./components/LogInAdmin";
 import LogInCustomer from "./components/LogInCustomer";
 import SignUpCustomer from "./components/SignUpCustomer";
 import SignUpAdmin from "./components/SignUpAdmin";
+import CreateRestaurant from "./components/CreateRestaurant";
 
 
 // ReactDOM.render(
@@ -26,6 +27,7 @@ render(
                 <Route path="/" element={<App />} />
                 <Route path="/LogInAdmin" element={<LogInAdmin />} />
                 <Route path="/SignUpAdmin" element={<SignUpAdmin />} />
+                <Route path="/CreateRestaurant" element={<CreateRestaurant />} />
                 <Route path="/LogInCustomer" element={<LogInCustomer />} />
                 <Route path="/SignUpCustomer" element={<SignUpCustomer />} />
         </Routes>

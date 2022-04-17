@@ -30,7 +30,6 @@ function CreateRestaurant(){
         fetch('http://localhost:8080/assignment2/zone/index')
             .then((response) => response.json())
             .then((json) => {
-                //setZones( json.results.map(({ name }) => ({ label: name, value: name })));
                 setZones(json);
             })
             .catch((error) => {
@@ -67,7 +66,6 @@ function CreateRestaurant(){
                         setIsSubmittedR(true);
                         localStorage.setItem("restaurant", JSON.stringify(restaurantRegistration));
                     }
-                    //localStorage.setItem('admin', JSON.stringify(response.data));
                 })
                 .catch((error) => {
                     console.error("There was an error!", error.response.data.message)
@@ -86,30 +84,6 @@ function CreateRestaurant(){
         name === errorMessagesR.name && (
             <div className="error">{errorMessagesR.message}</div>
         );
-
-    // const handleChange = (event) => {
-    //     const name = event.target.name;
-    //     const value = event.target.value;
-    //     //setOptions(Array.from(event.target.selectedOptions, (option) => option.value));
-    //     //console.log(event.target.selectedOptions.item(0).value);
-    //     setOptions([...options, event.target.selectedOptions.item(0).value]);
-    //     //setRestaurantRegistration({...restaurantRegistration, [name] : value});
-    //     setRestaurantRegistration({...restaurantRegistration, zones: {options}})
-    //     console.log(options)
-    // };
-
-    // const handleOnChange = (zoneId) => {
-    //     const updatedCheckedState = checkedState.map((item, index) =>
-    //         index === (zoneId - 149) ? !item : item
-    //     );
-    //     console.log(zoneId-149);
-    //     setCheckedState(updatedCheckedState);
-    //     setSelectedZones(selectedZones.concat(zoneId));
-    //
-    //     //console.log(selectedIds.indexOf(zoneId));
-    //     setRestaurantRegistration({...restaurantRegistration, zones: {selectedIds: selectedZones}});
-    //
-    // }
 
     const half = Math.ceil(zones.length / 2);
     const firstHalf = zones.slice(0, half)
@@ -223,13 +197,18 @@ function CreateRestaurant(){
         <div className="app">
             <div className="login-form">
                 <div className="title">Create restaurant</div>
-                {isSubmittedR ? <div>Restaurant successfully created</div> : renderForm}
-                <nav>
-                    <span>&nbsp;&nbsp;</span>
-                    <Link to="/">
-                        <Button as={Col} variant="outline-dark">Go back</Button>
-                    </Link>
-                </nav>
+                {isSubmittedR ?
+                    <div>
+                        <div>
+                            Restaurant successfully created
+                            <span>&nbsp;&nbsp;</span>
+                        </div>
+                        <span>&nbsp;&nbsp;</span>
+                        <Link to="/CreateMenu">
+                            <span>&nbsp;&nbsp;</span>
+                            <Button as={Col} variant="success">Create a menu</Button>
+                        </Link>
+                    </div>: renderForm}
                 <Outlet />
             </div>
         </div>

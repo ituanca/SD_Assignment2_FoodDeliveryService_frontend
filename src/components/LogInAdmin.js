@@ -4,6 +4,7 @@ import "./styles.css";
 import {Link, Outlet} from "react-router-dom";
 import {Button} from "react-bootstrap";
 import {Col} from "reactstrap";
+import axios from "axios";
 
 
 function LogInAdmin(){
@@ -11,43 +12,66 @@ function LogInAdmin(){
     const [errorMessages, setErrorMessages] = useState({});
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [existentAdmins, setExistentAdmins] = useState( [] );
-
-    useEffect(() => {
-        fetch('http://localhost:8080/assignment2/admin/index')
-            .then((response) => response.json())
-            .then((json) => {
-                setExistentAdmins(json);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }, []);
+    const [adminRegistration, setAdminRegistration] = useState({
+        username: "",
+        password: ""
+    });
 
         const errors = {
             uname: "invalid username",
-            pass: "invalid password"
+            pass: "invalid password",
         };
+
+    const handleInput = (event) => {
+        const name = event.target.name;
+        const value = event.target.value;
+        setAdminRegistration({ ...adminRegistration, [name] : value});
+    }
 
         const handleSubmit = (event) => {
             // Prevent page reload
             event.preventDefault();
-            var {uname, pass} = document.forms[0];
+            // var {uname, pass} = document.forms[0];
+            //
+            // // Find user login info
+            // const userData = existentAdmins.find((user) => user.username === uname.value);
+            //
+            // // Compare user info
+            // if (userData) {
+            //     if (userData.password !== pass.value) {
+            //         // Invalid password
+            //         setErrorMessages({name: "pass", message: errors.pass});
+            //     } else {
+            //         setIsSubmitted(true);
+            //     }
+            // } else {
+            //     // Username not found
+            //     setErrorMessages({name: "uname", message: errors.uname});
+            // }
 
-            // Find user login info
-            const userData = existentAdmins.find((user) => user.username === uname.value);
-
-            // Compare user info
-            if (userData) {
-                if (userData.password !== pass.value) {
-                    // Invalid password
-                    setErrorMessages({name: "pass", message: errors.pass});
-                } else {
-                    setIsSubmitted(true);
-                }
-            } else {
-                // Username not found
-                setErrorMessages({name: "uname", message: errors.uname});
-            }
+            axios
+                .get("http://localhost:8080/assignment2/admin/login", {
+                    params: {
+                        username: adminRegistration.username,
+                        password: adminRegistration.password
+                    }
+                })
+                .then((response) => {
+                    if (response.data === "username_error") {
+                        setErrorMessages({name: "uname", message: errors.uname});
+                        localStorage.removeItem("admin");
+                    } else if (response.data === "password_error"){
+                        setErrorMessages({name: "pass", message: errors.pass});
+                        localStorage.removeItem("customer");
+                    } else{
+                        setIsSubmitted(true);
+                        localStorage.setItem("admin", JSON.stringify(adminRegistration));
+                    }
+                    console.log(response.data);
+                })
+                .catch((error) =>
+                    console.error("There was an error!", error.response.data.message)
+                );
         };
 
         const renderErrorMessage = (name) =>
@@ -60,16 +84,28 @@ function LogInAdmin(){
                 <form onSubmit = {handleSubmit}>
                     <div className="input-container">
                         <label>Username </label>
-                        <input type="text" name="uname" required/>
+                        <input type="text"
+                               value={adminRegistration.username}
+                               onChange={handleInput}
+                               name="username" required id = "username"/>
                         {renderErrorMessage("uname")}
                     </div>
                     <div className="input-container">
                         <label>Password </label>
-                        <input type="password" name="pass" required/>
+                        <input type="password"
+                               value={adminRegistration.password}
+                               onChange={handleInput}
+                               name="password" required id = "password"/>
                         {renderErrorMessage("pass")}
                     </div>
                     <div className="button-container">
                         <input type="submit"/>
+                    </div>
+                    <div>
+                        <span>&nbsp;&nbsp;</span>
+                        <Link to="/">
+                            <Button as={Col} variant="outline-dark">Go back</Button>
+                        </Link>
                     </div>
                 </form>
             </div>
@@ -79,24 +115,21 @@ function LogInAdmin(){
             <div className="app">
                 <div className="login-form">
                     <div className="title">Sign In</div>
-                    {isSubmitted ? <div>Admin is successfully logged in</div> : renderForm}
-                    <nav>
-                        <span>&nbsp;&nbsp;</span>
-                        <Link to="/">
-                            <Button as={Col} variant="outline-dark">Go back</Button>
-                        </Link>
-                    </nav>
+                    {isSubmitted ?
+                        <div>
+                            <div>
+                                Admin has successfully logged in
+                                <span>&nbsp;&nbsp;</span>
+                            </div>
+                            <span>&nbsp;&nbsp;</span>
+                            <Link to="/AdminActions">
+                                <span>&nbsp;&nbsp;</span>
+                                <Button as={Col} variant="primary">Go to admin page</Button>
+                            </Link>
+                        </div>
+                        : renderForm}
                     <Outlet />
                 </div>
-                {/*<div>*/}
-                {/*    <ul>*/}
-                {/*        {existentAdmins.map(user => (*/}
-                {/*            <li key={user.id}>*/}
-                {/*                <p> {user.username}</p>*/}
-                {/*            </li>*/}
-                {/*        ))}*/}
-                {/*    </ul>*/}
-                {/*</div>*/}
             </div>
         );
 }

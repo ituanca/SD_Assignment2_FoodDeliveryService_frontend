@@ -69,7 +69,6 @@ function SignUpAdmin(){
                            value={adminRegistration.password}
                            onChange={handleInput}
                            name="password" required id = "password"/>
-                    {renderErrorMessage("password")}
                 </div>
                 <div className="button-container">
                     <input type="submit"/>

@@ -119,6 +119,12 @@ function SignUpCustomer(){
                 <div className="button-container">
                     <input type="submit"/>
                 </div>
+                <div>
+                    <span>&nbsp;&nbsp;</span>
+                    <Link to="/">
+                        <Button as={Col} variant="outline-dark">Go back</Button>
+                    </Link>
+                </div>
             </form>
         </div>
     );
@@ -127,13 +133,18 @@ function SignUpCustomer(){
         <div className="app">
             <div className="login-form">
                 <div className="title">Sign Up</div>
-                {isSubmittedSC ? <div>Account created successfully</div> : renderForm}
-                <nav>
-                    <span>&nbsp;&nbsp;</span>
-                    <Link to="/">
-                        <Button as={Col} variant="outline-dark">Go back</Button>
-                    </Link>
-                </nav>
+                {isSubmittedSC ?
+                    <div>
+                        <div>
+                            Account created successfully
+                        </div>
+                        <span>&nbsp;&nbsp;</span>
+                        <Link to="/CustomerActions">
+                            <span>&nbsp;&nbsp;</span>
+                            <Button as={Col} variant="primary">Go to customer page</Button>
+                        </Link>
+                    </div>
+                    : renderForm}
                 <Outlet />
             </div>
         </div>

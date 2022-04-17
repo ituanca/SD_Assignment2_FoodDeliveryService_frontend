@@ -6,14 +6,36 @@ const TableOfFoods = () => {
 
     const [items, setItems] = useState([]);
 
+    // const [itemsRegistration, setItemsRegistration] = useState(
+    //     [
+    //         {
+    //             name: "",
+    //             ingredients: "",
+    //             price: 0,
+    //             category: ""
+    //         }
+    //         ]);
+
+   // const handleChangeOfRegistration = event => {
+   //     const name = event.target.name;
+   //     const value = event.target.value;
+   //     setItemsRegistration({ ...itemsRegistration, [name] : value,
+   //         category: JSON.parse(localStorage.getItem('category'))});
+   //  }
+
     const handleItemsChange = event => {
         const tempFoods = [...items];
         tempFoods[event.target.dataset.id][event.target.name] = event.target.value;
         setItems(tempFoods);
+        localStorage.setItem("listOfFood", JSON.stringify(items));
+        //console.log(items);
     };
 
+    const chosenCategory = JSON.parse(localStorage.getItem("category"));
+    const restaurant = JSON.parse(localStorage.getItem("restaurant"));
+
     const addNewItem = () => {
-        setItems(prevItems => [...prevItems, { name: "", ingredients: "", price: 0 }]);
+        setItems(prevItems => [...prevItems, { name: "", ingredients: "", price: [], category: chosenCategory, restaurant: restaurant}]);
     };
 
     return (
@@ -31,10 +53,13 @@ const TableOfFoods = () => {
                         <div className="table-data">
                             <div>Price</div>
                         </div>
+                        <div className="table-data">
+                            <div>Category</div>
+                        </div>
                     </div>
                 </div>
                 <div className="table-body">
-                    {items.map(({name, ingredients, price}, index) => (
+                    {items.map(({name, ingredients, price, category}, index) => (
                         <div className="table-row" key={index}>
                             <div className="table-data">
                                 <input
@@ -60,6 +85,17 @@ const TableOfFoods = () => {
                                     data-id={index}
                                     type="number"
                                     value={price}
+                                    onChange={handleItemsChange}
+                                />
+                            </div>
+                            <div className="table-data">
+                                <input
+                                    name="category"
+                                    data-id={index}
+                                    type="text"
+                                    value={category}
+                                    placeholder={localStorage.getItem('category')}
+                                    readOnly = {true}
                                     onChange={handleItemsChange}
                                 />
                             </div>

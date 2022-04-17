@@ -204,9 +204,9 @@ function CreateRestaurant(){
                             <span>&nbsp;&nbsp;</span>
                         </div>
                         <span>&nbsp;&nbsp;</span>
-                        <Link to="/CreateMenu">
+                        <Link to="/AdminActions">
                             <span>&nbsp;&nbsp;</span>
-                            <Button as={Col} variant="success">Create a menu</Button>
+                            <Button as={Col} variant="success">Go to admin page</Button>
                         </Link>
                     </div>: renderForm}
                 <Outlet />

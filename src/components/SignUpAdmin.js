@@ -10,22 +10,10 @@ import axios from "axios";
 function SignUpAdmin(){
     const [errorMessagesAS, setErrorMessagesAS] = useState({});
     const [isSubmittedAS, setIsSubmittedAS] = useState(false);
-    const [existentAdmins, setExistentAdmins] = useState( [] );
     const [adminRegistration, setAdminRegistration] = useState({
         username: "",
         password: ""
     });
-
-    useEffect(() => {
-        // fetch('http://localhost:8080/assignment2/admin/index')
-        //     .then((response) => response.json())
-        //     .then((jsonAS) => {
-        //         setExistentAdmins(jsonAS);
-        //     })
-        //     .catch((error) => {
-        //         console.log(error);
-        //     });
-    }, []);
 
     const errors = {
         username: "username already exists",
@@ -37,49 +25,27 @@ function SignUpAdmin(){
         setAdminRegistration({ ...adminRegistration, [name] : value});
     }
 
-
     const handleSubmit = (event) => {
         // Prevent page reload
         event.preventDefault();
-        //var {username} = document.forms[0];
 
-        // const userByUsername = existentAdmins.find((user) => user.username === adminRegistration.username);
-        //
-        // if (userByUsername) {
-        //     setErrorMessagesAS({name: "username", message: errors.username});
-        // } else {
-        //     setIsSubmittedAS(true);
-        //      localStorage.setItem("admin", JSON.stringify(adminRegistration));
-            // axios.post('http://localhost:8080/assignment2/admin/create', adminRegistration)
-            //     .then(response => setAdminRegistration(response.data.id));
-
-            axios
-                .get('http://localhost:8080/assignment2/admin/check', adminRegistration.username)
-                .then((response) => {
-                    console.info(response);
+        axios
+            .post('http://localhost:8080/assignment2/admin/check', adminRegistration)
+            .then((response) => {
+                console.info(response);
+                if (response.data === false) {
+                    setErrorMessagesAS({name: "username", message: errors.username});
+                    localStorage.removeItem("admin");
+                } else {
                     setIsSubmittedAS(true);
                     localStorage.setItem("admin", JSON.stringify(adminRegistration));
-                    //localStorage.setItem('admin', JSON.stringify(response.data));
-                })
-                .catch((error) => {
-                    localStorage.removeItem("admin");
-                    console.error("There was an error!", error.response.data.message)
-                });
-
-            axios
-                .post('http://localhost:8080/assignment2/admin/create', adminRegistration)
-                .then((response) => {
-                    console.info(response);
-                    //localStorage.setItem('admin', JSON.stringify(response.data));
-                })
-                .catch((error) => {
-                    localStorage.removeItem("admin");
-                    console.error("There was an error!", error.response.data.message)
-                });
-        // }
-    };
-
-    console.log(adminRegistration);
+                }
+                //localStorage.setItem('admin', JSON.stringify(response.data));
+            })
+            .catch((error) => {
+                console.error("There was an error!", error.response.data.message)
+            });
+    }
 
     const renderErrorMessage = (name) =>
         name === errorMessagesAS.name && (

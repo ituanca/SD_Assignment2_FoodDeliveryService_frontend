@@ -10,7 +10,6 @@ import axios from "axios";
 function SignUpCustomer(){
     const [errorMessagesSC, setErrorMessagesSC] = useState({});
     const [isSubmittedSC, setIsSubmittedSC] = useState(false);
-    const [existentCustomers, setExistentCustomers] = useState( [] );
     const [customerRegistration, setCustomerRegistration] = useState({
         username: "",
         password: "",
@@ -18,16 +17,16 @@ function SignUpCustomer(){
         email: ""
     });
 
-    useEffect(() => {
-        fetch('http://localhost:8080/assignment2/customer/index')
-            .then((response) => response.json())
-            .then((jsonAS) => {
-                setExistentCustomers(jsonAS);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }, []);
+    // useEffect(() => {
+    //     fetch('http://localhost:8080/assignment2/customer/index')
+    //         .then((response) => response.json())
+    //         .then((jsonAS) => {
+    //             setExistentCustomers(jsonAS);
+    //         })
+    //         .catch((error) => {
+    //             console.log(error);
+    //         });
+    // }, []);
 
     const errors = {
         username: "username already exists",
@@ -38,27 +37,45 @@ function SignUpCustomer(){
         const name = event.target.name;
         const value = event.target.value;
         setCustomerRegistration({ ...customerRegistration, [name] : value});
-        //console.log(customerRegistration);
     }
 
     const handleSubmit = (event) => {
         // Prevent page reload
         event.preventDefault();
 
-        const userByUsername = existentCustomers.find((user) => user.username === customerRegistration.username);
-        const userByEmail = existentCustomers.find((user) => user.email === customerRegistration.email);
-        console.log(userByUsername);
+        // const userByUsername = existentCustomers.find((user) => user.username === customerRegistration.username);
+        // const userByEmail = existentCustomers.find((user) => user.email === customerRegistration.email);
+        // console.log(userByUsername);
+        //
+        //
+        // if (userByUsername) {
+        //     setErrorMessagesSC({name: "username", message: errors.username});
+        // } else if(userByEmail){
+        //     setErrorMessagesSC({name: "email", message: errors.email});
+        // } else {
+        //     setIsSubmittedSC(true);
+        //     axios.post('http://localhost:8080/assignment2/customer/create', customerRegistration)
+        //         .then(response => setCustomerRegistration(response.data.id));
+        // }
 
-
-        if (userByUsername) {
-            setErrorMessagesSC({name: "username", message: errors.username});
-        } else if(userByEmail){
-            setErrorMessagesSC({name: "email", message: errors.email});
-        } else {
-            setIsSubmittedSC(true);
-            axios.post('http://localhost:8080/assignment2/customer/create', customerRegistration)
-                .then(response => setCustomerRegistration(response.data.id));
-        }
+        axios
+            .post('http://localhost:8080/assignment2/customer/createAndValidate', customerRegistration)
+            .then((response) => {
+                console.info(response);
+                if (response.data === "username_exists") {
+                    setErrorMessagesSC({name: "username", message: errors.username});
+                    localStorage.removeItem("customer");
+                } else if (response.data === "email_exists"){
+                    setErrorMessagesSC({name: "email", message: errors.email});
+                    localStorage.removeItem("customer");
+                } else{
+                    setIsSubmittedSC(true);
+                    localStorage.setItem("customer", JSON.stringify(customerRegistration));
+                }
+            })
+            .catch((error) => {
+                console.error("There was an error!", error.response.data.message)
+            });
     };
 
     const renderErrorMessage = (nameErr) =>
@@ -105,8 +122,6 @@ function SignUpCustomer(){
             </form>
         </div>
     );
-
-    // console.log('I was triggered during log in customer')
 
     return (
         <div className="app">

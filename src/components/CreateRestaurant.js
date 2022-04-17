@@ -27,14 +27,6 @@ function CreateRestaurant(){
     );
 
     useEffect(() => {
-        fetch('http://localhost:8080/assignment2/restaurant/index')
-            .then((response) => response.json())
-            .then((json) => {
-                setExistentRestaurants(json);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
         fetch('http://localhost:8080/assignment2/zone/index')
             .then((response) => response.json())
             .then((json) => {
@@ -54,26 +46,33 @@ function CreateRestaurant(){
         // Prevent page reload
         event.preventDefault();
 
-        const restaurantByName = existentRestaurants.find((restaurant) => restaurant.name === restaurantRegistration.name);
+        // const restaurantByName = existentRestaurants.find((restaurant) => restaurant.name === restaurantRegistration.name);
+        //
+        // if (restaurantByName) {
+        //     setErrorMessagesR({name: "name", message: errors.name});
+        // } else {
+        //     setIsSubmittedR(true);
+        //     console.log(restaurantRegistration);
+        //     axios.post('http://localhost:8080/assignment2/restaurant/create', restaurantRegistration)
+        //         .then(response => setRestaurantRegistration(response.data.id));
 
-        if (restaurantByName) {
-            setErrorMessagesR({name: "name", message: errors.name});
-        } else {
-            setIsSubmittedR(true);
-            console.log(restaurantRegistration);
-            axios.post('http://localhost:8080/assignment2/restaurant/create', restaurantRegistration)
-                .then(response => setRestaurantRegistration(response.data.id));
+            axios
+                .post('http://localhost:8080/assignment2/restaurant/createBoolean', restaurantRegistration)
+                .then((response) => {
+                    console.info(response);
+                    if (response.data === false) {
+                        setErrorMessagesR({name: "name", message: errors.name});
+                        localStorage.removeItem("restaurant");
+                    } else {
+                        setIsSubmittedR(true);
+                        localStorage.setItem("restaurant", JSON.stringify(restaurantRegistration));
+                    }
+                    //localStorage.setItem('admin', JSON.stringify(response.data));
+                })
+                .catch((error) => {
+                    console.error("There was an error!", error.response.data.message)
+                });
 
-            // axios
-            //     .post('http://localhost:8080/assignment2/restaurant/create', restaurantRegistration)
-            //     .then((response) => {
-            //         console.info(response);
-            //         setRestaurantRegistration(response.data.id)
-            //     })
-            //     .catch((error) => {
-            //         console.error("There was an error!", error.response.data.message)
-            //     });
-        }
     };
 
     const handleInput = (event) => {

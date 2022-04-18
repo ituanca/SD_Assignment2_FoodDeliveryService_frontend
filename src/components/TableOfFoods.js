@@ -23,19 +23,19 @@ const TableOfFoods = () => {
    //         category: JSON.parse(localStorage.getItem('category'))});
    //  }
 
-    const handleItemsChange = event => {
+    const chosenCategory = JSON.parse(localStorage.getItem("category"));
+
+    const handleItemsChange = (event) => {
         const tempFoods = [...items];
         tempFoods[event.target.dataset.id][event.target.name] = event.target.value;
         setItems(tempFoods);
+        console.log(items)
         localStorage.setItem("listOfFood", JSON.stringify(items));
         //console.log(items);
     };
 
-    const chosenCategory = JSON.parse(localStorage.getItem("category"));
-    const restaurant = JSON.parse(localStorage.getItem("restaurant"));
-
     const addNewItem = () => {
-        setItems(prevItems => [...prevItems, { name: "", ingredients: "", price: [], category: chosenCategory, restaurant: restaurant}]);
+        setItems(prevItems => [...prevItems, { food: "", listOfIngredients: "", price: 0, category: chosenCategory}]);
     };
 
     return (
@@ -59,23 +59,23 @@ const TableOfFoods = () => {
                     </div>
                 </div>
                 <div className="table-body">
-                    {items.map(({name, ingredients, price, category}, index) => (
+                    {items.map(({food, listOfIngredients, price, category}, index) => (
                         <div className="table-row" key={index}>
                             <div className="table-data">
                                 <input
-                                    name="name"
+                                    name="food"
                                     data-id={index}
                                     type="text"
-                                    value={name}
+                                    value={food}
                                     onChange={handleItemsChange}
                                 />
                             </div>
                             <div className="table-data">
                                 <input
-                                    name="ingredients"
+                                    name="listOfIngredients"
                                     data-id={index}
                                     type="text"
-                                    value={ingredients}
+                                    value={listOfIngredients}
                                     onChange={handleItemsChange}
                                 />
                             </div>

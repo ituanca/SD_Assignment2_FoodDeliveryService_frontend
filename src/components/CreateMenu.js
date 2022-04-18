@@ -6,40 +6,65 @@ import {Button} from "react-bootstrap";
 import {Col} from "reactstrap";
 import axios from "axios";
 import "@reach/combobox/styles.css";
-import {useForm} from "react-hook-form";
-import TableOfFoods from "./TableOfFoods.js";
+import logInCustomer from "./LogInCustomer";
 
 
 function CreateMenu(){
 
     const [errorMessagesM, setErrorMessagesM] = useState({});
     const [isSubmittedM, setIsSubmittedM] = useState(false);
-    const [foodRegistration, setFoodRegistration] = useState({
-        restaurant: [],
-        admin: []
-    });
     const [categories, setCategories] = useState( [] );
     const [selectedCategory, setSelectedCategory] = useState( "" );
-
-
-    // const [itemRegistration, setItemRegistration] = useState(
-    //     {
-    //         name: "",
-    //         ingredients: "",
-    //         price: 0,
-    //         category: "",
-    //     });
+    const [item, setItem] = useState({
+        food: "",
+        listOfIngredients: "",
+        price: 0,
+        category: {
+            id: 0,
+            category: ""
+        },
+        restaurant: ""
+    });
 
 
     useEffect(() => {
-        fetch('http://localhost:8080/assignment2/category/index')
-            .then((response) => response.json())
-            .then((json) => {
-                setCategories(json);
+        // fetch('http://localhost:8080/assignment2/category/index')
+        //     .then((response) => response.json())
+        //     .then((json) => {
+        //         setCategories(json);
+        //     })
+        //     .catch((error) => {
+        //         console.log(error);
+        //     });
+        axios
+            .get("http://localhost:8080/assignment2/category/index")
+            .then((response) => {
+                setCategories(response.data);
             })
             .catch((error) => {
                 console.log(error);
             });
+
+        const admin = JSON.parse(localStorage.getItem('admin'));
+        console.log(admin);
+
+        axios
+            .get("http://localhost:8080/assignment2/restaurant/findByAdmin", {
+                params:{
+                    admin: admin.username
+                }
+            })
+            .then((response) => {
+                if(response.data === ""){
+                    console.log("There was an error!")
+                }else{
+                    console.log(response.data);
+                    localStorage.setItem("restaurant", JSON.stringify(response.data));
+                }
+            })
+            .catch((error) =>
+                console.error("There was an error!", error.response.data.message)
+            );
     }, []);
 
     const errors = {
@@ -49,38 +74,39 @@ function CreateMenu(){
     const handleSubmit = (event) => {
         // Prevent page reload
         event.preventDefault();
-        const listOfFood = JSON.parse(localStorage.getItem("listOfFood"));
-        console.log(listOfFood);
+
+        console.log(JSON.parse(localStorage.getItem("foodItem")));
+        console.log(item);
 
         axios
-            .post("http://localhost:8080/assignment2/food/add", listOfFood)
+            .post("http://localhost:8080/assignment2/food/add", item)
             .then((response) => {
                 console.info(response);
                 setIsSubmittedM(true);
-                localStorage.setItem("menu", JSON.stringify(foodRegistration));
             })
             .catch((error) => {
                 console.error("There was an error!", error.response.data.message)
             });
-        localStorage.removeItem("listOfFood");
     };
 
-    const handleInput = (event) => {
+    const handleInput = event => {
         const name = event.target.name;
         const value = event.target.value;
-        setFoodRegistration({ ...foodRegistration, [name] : value,
-            restaurant: JSON.parse(localStorage.getItem('restaurant'))});
+        setItem({ ...item, [name] : value,
+            category: JSON.parse(localStorage.getItem('category')),
+            restaurant: JSON.parse(localStorage.getItem('restaurant')).name});
+        localStorage.setItem("foodItem", JSON.stringify(item));
+        console.log(item);
     }
 
     const handleOnChange = (event) => {
         setSelectedCategory(event.target.name);
-        console.log(event.target.value)
-
+        localStorage.setItem("category", JSON.stringify(selectedCategory));
+        setItem({ ...item, category: JSON.parse(localStorage.getItem('category'))});
     }
 
     const saveCategory = () =>  {
         localStorage.setItem("category", JSON.stringify(selectedCategory));
-        console.log(localStorage.getItem("category"))
     }
 
     const renderErrorMessage = (name) =>
@@ -105,7 +131,7 @@ function CreateMenu(){
                                                     type="radio"
                                                     name={category}
                                                     value={id}
-                                                    checked={selectedCategory === {category}}
+                                                    checked={selectedCategory === category}
                                                 />
                                                 <label htmlFor={`custom-checkbox-${index}`}>{category}</label>
                                             </div>
@@ -114,13 +140,49 @@ function CreateMenu(){
                                 </div>
                             );
                         })}
+                        {saveCategory()}
                     </div>
+                    <span>&nbsp;&nbsp;</span>
                     <div>
-                        Selected category  : <dt>{selectedCategory}</dt>
+                        Insert new food for the {selectedCategory} category:
                         {(selectedCategory!=="") ?
                             <div>
-                                <TableOfFoods />
-                                {saveCategory()}
+                                <div>
+                                    <div className="input-container">
+                                        <label>Item </label>
+                                        <input type="text"
+                                               value={item.food}
+                                               onChange={handleInput}
+                                               name="food" required
+                                               id = "food"/>
+                                    </div>
+                                    <div className="input-container">
+                                        <label>List of ingredients </label>
+                                        <input type="text"
+                                               value={item.listOfIngredients}
+                                               onChange={handleInput}
+                                               name="listOfIngredients" required
+                                               id = "listOfIngredients"/>
+                                    </div>
+                                    <div className="input-container">
+                                        <label>Price </label>
+                                        <input type="number"
+                                               value={item.price}
+                                               onChange={handleInput}
+                                               name="price" required
+                                               id = "price"/>
+                                    </div>
+                                    <div className="input-container">
+                                        <label>Category </label>
+                                        <input name="category"
+                                               id="category"
+                                               type="text"
+                                               value={JSON.parse(localStorage.getItem('category')).name}
+                                               placeholder={localStorage.getItem('category')}
+                                               readOnly = {true}
+                                               onChange={handleInput}/>
+                                    </div>
+                                </div>
                             </div> : null}
                     </div>
                 </div>
@@ -136,8 +198,7 @@ function CreateMenu(){
             <span>&nbsp;&nbsp;</span>
             <div className="login-form">
                 <div className="title">Create menu</div>
-                <div> You can add multiple items belonging to the same category.</div>
-                {isSubmittedM ? <div>Menu successfully created</div> : renderForm}
+                {isSubmittedM ? <div>Food was successfully added to the menu</div> : renderForm}
                 <nav>
                     <span>&nbsp;&nbsp;</span>
                     <Link to="/AdminActions">

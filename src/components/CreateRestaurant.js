@@ -45,16 +45,6 @@ function CreateRestaurant(){
         // Prevent page reload
         event.preventDefault();
 
-        // const restaurantByName = existentRestaurants.find((restaurant) => restaurant.name === restaurantRegistration.name);
-        //
-        // if (restaurantByName) {
-        //     setErrorMessagesR({name: "name", message: errors.name});
-        // } else {
-        //     setIsSubmittedR(true);
-        //     console.log(restaurantRegistration);
-        //     axios.post('http://localhost:8080/assignment2/restaurant/create', restaurantRegistration)
-        //         .then(response => setRestaurantRegistration(response.data.id));
-
             axios
                 .post('http://localhost:8080/assignment2/restaurant/createBoolean', restaurantRegistration)
                 .then((response) => {
@@ -65,6 +55,7 @@ function CreateRestaurant(){
                     } else {
                         setIsSubmittedR(true);
                         localStorage.setItem("restaurant", JSON.stringify(restaurantRegistration));
+                        localStorage.setItem("restaurantName", JSON.stringify(restaurantRegistration.name));
                     }
                 })
                 .catch((error) => {

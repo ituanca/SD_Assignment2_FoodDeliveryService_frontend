@@ -50,7 +50,6 @@ function ViewMenu(){
                 }else{
                     console.log(response.data);
                     localStorage.setItem("menu", JSON.stringify(response.data));
-                    console.log(localStorage.getItem('menu'))
                 }
             })
             .catch((error) =>
@@ -60,31 +59,26 @@ function ViewMenu(){
         const menu = JSON.parse(localStorage.getItem('menu'));
         console.log(menu);
 
-        // axios
-        //     .get("http://localhost:8080/assignment2/food/findByMenu")
-        //     .then((response) => {
-        //         setItems(response.data);
-        //         console.log(items);
-        //     })
-        //     .catch((error) => {
-        //         console.log(error);
-        //     });
-
+        axios
+            .get("http://localhost:8080/assignment2/food/findByMenu",{
+                params:{
+                    menu: menu
+                }
+            })
+            .then((response) => {
+                setItems(response.data);
+                console.log(items);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
 
     }, []);
+
 
     const errors = {
         name: "invalid name",
     };
-
-    const handleSubmit = (event) => {
-        // Prevent page reload
-        event.preventDefault();
-
-        console.log(item);
-
-    };
-
 
     const handleOnChange = (event) => {
         setSelectedCategory(event.target.name);
@@ -93,6 +87,7 @@ function ViewMenu(){
 
     const saveCategory = () =>  {
         localStorage.setItem("category", JSON.stringify(selectedCategory));
+        //console.log(localStorage.getItem("category"))
     }
 
 
@@ -186,50 +181,50 @@ function ViewMenu(){
                                                 </div>
                                             </div>
                                             <div className="table-body">
-                                                {items.map(({food, listOfIngredients, price, category}, index) => (
-                                                    <div className="table-row" key={index}>
-                                                        <div className="table-data">
-                                                            <input
-                                                                name="food"
-                                                                data-id={index}
-                                                                type="text"
-                                                                value={food}
-                                                                placeholder={food}
-                                                                readOnly = {true}
-                                                            />
-                                                        </div>
-                                                        <div className="table-data">
-                                                            <input
-                                                                name="listOfIngredients"
-                                                                data-id={index}
-                                                                type="text"
-                                                                value={listOfIngredients}
-                                                                placeholder={listOfIngredients}
-                                                                readOnly = {true}
-                                                            />
-                                                        </div>
-                                                        <div className="table-data">
-                                                            <input
-                                                                name="price"
-                                                                data-id={index}
-                                                                type="number"
-                                                                value={price}
-                                                                placeholder={price}
-                                                                readOnly = {true}
-                                                            />
-                                                        </div>
-                                                        <div className="table-data">
-                                                            <input
-                                                                name="category"
-                                                                data-id={index}
-                                                                type="text"
-                                                                value={category}
-                                                                placeholder={category}
-                                                                readOnly = {true}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                ))}
+                                                    {items.map(({food, listOfIngredients, price, category}, index) => (
+                                                            <div className="table-row" key={index}>
+                                                                <div className="table-data">
+                                                                    <input
+                                                                        name="food"
+                                                                        data-id={index}
+                                                                        type="text"
+                                                                        value={food}
+                                                                        placeholder={food}
+                                                                        readOnly = {true}
+                                                                    />
+                                                                </div>
+                                                                <div className="table-data">
+                                                                    <input
+                                                                        name="listOfIngredients"
+                                                                        data-id={index}
+                                                                        type="text"
+                                                                        value={listOfIngredients}
+                                                                        placeholder={listOfIngredients}
+                                                                        readOnly = {true}
+                                                                    />
+                                                                </div>
+                                                                <div className="table-data">
+                                                                    <input
+                                                                        name="price"
+                                                                        data-id={index}
+                                                                        type="number"
+                                                                        value={price}
+                                                                        placeholder={price}
+                                                                        readOnly = {true}
+                                                                    />
+                                                                </div>
+                                                                <div className="table-data">
+                                                                    <input
+                                                                        name="category"
+                                                                        data-id={index}
+                                                                        type="text"
+                                                                        value={category}
+                                                                        placeholder={category}
+                                                                        readOnly = {true}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        ))}
                                             </div>
                                         </div>
                                     </div>

@@ -26,7 +26,6 @@ function CreateMenu(){
         restaurant: ""
     });
 
-
     useEffect(() => {
         // fetch('http://localhost:8080/assignment2/category/index')
         //     .then((response) => response.json())
@@ -70,7 +69,13 @@ function CreateMenu(){
 
     const errors = {
         name: "invalid name",
+        price: "invalid price"
     };
+
+    const renderErrorMessage = (name) =>
+        name === errorMessagesM.name && (
+            <div className="error">{errorMessagesM.message}</div>
+        );
 
     const handleSubmit = (event) => {
         // Prevent page reload
@@ -82,7 +87,13 @@ function CreateMenu(){
             .post("http://localhost:8080/assignment2/food/add", item)
             .then((response) => {
                 console.info(response);
-                setIsSubmittedM(true);
+                if (response.data === "name_error") {
+                    setErrorMessagesM({name: "name", message: errors.name});
+                } else if (response.data === "price_error"){
+                    setErrorMessagesM({name: "price", message: errors.price});
+                } else{
+                    setIsSubmittedM(true);
+                }
             })
             .catch((error) => {
                 console.error("There was an error!", error.response.data.message)
@@ -108,11 +119,6 @@ function CreateMenu(){
     const saveCategory = () =>  {
         localStorage.setItem("category", JSON.stringify(selectedCategory));
     }
-
-    const renderErrorMessage = (name) =>
-        name === errorMessagesM.name && (
-            <div className="error">{errorMessagesM.message}</div>
-        );
 
     const renderForm = (
         <div className="form">
@@ -155,6 +161,7 @@ function CreateMenu(){
                                                onChange={handleInput}
                                                name="food" required
                                                id = "food"/>
+                                        {renderErrorMessage("name")}
                                     </div>
                                     <div className="input-container">
                                         <label>List of ingredients </label>
@@ -171,6 +178,7 @@ function CreateMenu(){
                                                onChange={handleInput}
                                                name="price" required
                                                id = "price"/>
+                                        {renderErrorMessage("price")}
                                     </div>
                                     <div className="input-container">
                                         <label>Category </label>

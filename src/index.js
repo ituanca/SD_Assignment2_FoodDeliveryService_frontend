@@ -14,6 +14,8 @@ import CreateMenu from "./components/CreateMenu";
 import AdminActions from "./components/AdminActions";
 import ViewMenu from "./components/ViewMenu";
 import CustomerActions from "./components/CustomerActions";
+import ViewRestaurants from "./components/ViewRestaurants";
+import ViewMenuCustomer from "./components/ViewMenuCustomer";
 
 
 // ReactDOM.render(
@@ -24,6 +26,8 @@ import CustomerActions from "./components/CustomerActions";
 // );
 
 const rootElement = document.getElementById("root");
+
+
 render(
 
     <BrowserRouter>
@@ -38,6 +42,8 @@ render(
                 <Route path="/LogInCustomer" element={<LogInCustomer />} />
                 <Route path="/SignUpCustomer" element={<SignUpCustomer />} />
                 <Route path="/CustomerActions" element={<CustomerActions />} />
+                <Route path="/ViewRestaurants" element={<ViewRestaurants />} />
+                <Route path="/ViewMenuCustomer" element={<ViewMenuCustomer />} />
         </Routes>
         {/*<App />*/}
     </BrowserRouter>,

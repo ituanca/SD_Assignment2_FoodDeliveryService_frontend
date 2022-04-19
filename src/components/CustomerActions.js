@@ -16,13 +16,7 @@ function CustomerActions(){
 
                     <span>&nbsp;&nbsp;</span>
                     <Link to="/ViewRestaurants">
-                        <Button as={Col} variant="primary">Add food to menu</Button>
-                    </Link>
-                    <span>&nbsp;&nbsp;</span>
-
-                    <span>&nbsp;&nbsp;</span>
-                    <Link to="/ViewMenu">
-                        <Button as={Col} variant="primary">View menu</Button>
+                        <Button as={Col} variant="success">View restaurants</Button>
                     </Link>
                     <span>&nbsp;&nbsp;</span>
 

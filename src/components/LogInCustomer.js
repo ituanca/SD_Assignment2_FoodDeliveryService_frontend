@@ -70,13 +70,13 @@ function LogInCustomer(){
             .then((response) => {
                 if (response.data === "username_error") {
                     setErrorMessagesC({name: "uname", message: errors.uname});
-                    localStorage.removeItem("admin");
+                    localStorage.removeItem("customer");
                 } else if (response.data === "password_error"){
                     setErrorMessagesC({name: "pass", message: errors.pass});
                     localStorage.removeItem("customer");
                 } else{
                     setIsSubmittedC(true);
-                    localStorage.setItem("admin", JSON.stringify(customerRegistration));
+                    localStorage.setItem("customer", JSON.stringify(customerRegistration));
                 }
                 console.log(response.data);
             })

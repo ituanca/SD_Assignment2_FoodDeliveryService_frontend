@@ -111,7 +111,7 @@ function SignUpCustomer(){
                 </div>
                 <div className="input-container">
                     <label>Password </label>
-                    <input type="text"
+                    <input type="password"
                            value={customerRegistration.password}
                            onChange={handleInput}
                            name="password" required id = "password"/>

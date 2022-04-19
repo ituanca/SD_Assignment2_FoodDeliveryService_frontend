@@ -13,6 +13,19 @@ function CustomerActions(){
             <div className="login-form">
                 <div className="title">Customer</div>
                 <div>
+
+                    <span>&nbsp;&nbsp;</span>
+                    <Link to="/ViewRestaurants">
+                        <Button as={Col} variant="primary">Add food to menu</Button>
+                    </Link>
+                    <span>&nbsp;&nbsp;</span>
+
+                    <span>&nbsp;&nbsp;</span>
+                    <Link to="/ViewMenu">
+                        <Button as={Col} variant="primary">View menu</Button>
+                    </Link>
+                    <span>&nbsp;&nbsp;</span>
+
                     <span>&nbsp;&nbsp;</span>
                     <Link to="/">
                         <Button as={Col} variant="outline-dark">Go back</Button>

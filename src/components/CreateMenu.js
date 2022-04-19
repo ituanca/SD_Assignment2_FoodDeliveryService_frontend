@@ -60,6 +60,7 @@ function CreateMenu(){
                 }else{
                     console.log(response.data);
                     localStorage.setItem("restaurant", JSON.stringify(response.data));
+                    console.log(localStorage.getItem('restaurant'))
                 }
             })
             .catch((error) =>
@@ -75,7 +76,6 @@ function CreateMenu(){
         // Prevent page reload
         event.preventDefault();
 
-        console.log(JSON.parse(localStorage.getItem("foodItem")));
         console.log(item);
 
         axios
@@ -94,7 +94,7 @@ function CreateMenu(){
         const value = event.target.value;
         setItem({ ...item, [name] : value,
             category: JSON.parse(localStorage.getItem('category')),
-            restaurant: JSON.parse(localStorage.getItem('restaurant')).name});
+            restaurant: JSON.parse(localStorage.getItem('restaurant'))});
         localStorage.setItem("foodItem", JSON.stringify(item));
         console.log(item);
     }

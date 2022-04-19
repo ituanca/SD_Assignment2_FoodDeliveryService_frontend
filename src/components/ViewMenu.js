@@ -6,6 +6,7 @@ import {Button} from "react-bootstrap";
 import {Col} from "reactstrap";
 import axios from "axios";
 import "@reach/combobox/styles.css";
+import "./tableOfFoods.css";
 
 
 function ViewMenu(){
@@ -23,6 +24,7 @@ function ViewMenu(){
         },
         restaurant: ""
     });
+    const [clickedViewAll, setClickedViewAll] = useState( false );
 
 
     useEffect(() => {
@@ -56,7 +58,7 @@ function ViewMenu(){
                 console.error("There was an error!", error.response.data.message)
             );
 
-        const menu = JSON.parse(localStorage.getItem('menu'));
+        const menu = localStorage.getItem('menu');
         console.log(menu);
 
         axios
@@ -66,8 +68,9 @@ function ViewMenu(){
                 }
             })
             .then((response) => {
+                console.log(response.data);
                 setItems(response.data);
-                console.log(items);
+                localStorage.setItem("items", JSON.stringify(response.data));
             })
             .catch((error) => {
                 console.log(error);
@@ -80,8 +83,14 @@ function ViewMenu(){
         name: "invalid name",
     };
 
+    const handleClick = (event) => {
+        setClickedViewAll(true);
+        setSelectedCategory("");
+    }
+
     const handleOnChange = (event) => {
         setSelectedCategory(event.target.name);
+        setClickedViewAll(false);
         localStorage.setItem("category", JSON.stringify(selectedCategory));
     }
 
@@ -90,12 +99,15 @@ function ViewMenu(){
         //console.log(localStorage.getItem("category"))
     }
 
-
     const renderForm = (
         <div className="form">
             <form>
+                <div>
+                    <Button as={Col} variant="primary" onClick={handleClick}>View the entire menu</Button>
+                </div>
                 <span>&nbsp;&nbsp;</span>
-                <div>Choose category:</div>
+                <h5>Or choose one category:</h5>
+                <span>&nbsp;&nbsp;</span>
                 <div className="radio">
                     <div className="row">
                         { categories.map(({ id, category }, index) => {
@@ -121,46 +133,82 @@ function ViewMenu(){
                     </div>
                     <span>&nbsp;&nbsp;</span>
                     <div>
-                        You selected: {selectedCategory}
+                        {(clickedViewAll===true) ?
+                            <div>
+                                <div className="table">
+                                    <div className="table-title">Menu</div>
+                                    <div className="table-content">
+                                        <div className="table-header">
+                                            <div className="table-row">
+                                                <div className="table-data">
+                                                    <div>Item</div>
+                                                </div>
+                                                <div className="table-data">
+                                                    <div>List of ingredients</div>
+                                                </div>
+                                                <div className="table-data">
+                                                    <div>Price</div>
+                                                </div>
+                                                <div className="table-data">
+                                                    <div>Category</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="table-body">
+                                            {items.map(({food, listOfIngredients, price, category}, index) => (
+                                                <div className="table-row" key={index}>
+                                                    <div className="table-data">
+                                                        <input
+                                                            name="food"
+                                                            data-id={index}
+                                                            type="text"
+                                                            value={food}
+                                                            placeholder={food}
+                                                            readOnly = {true}
+                                                        />
+                                                    </div>
+                                                    <div className="table-data">
+                                                        <input
+                                                            name="listOfIngredients"
+                                                            data-id={index}
+                                                            type="text"
+                                                            value={listOfIngredients}
+                                                            placeholder={listOfIngredients}
+                                                            readOnly = {true}
+                                                        />
+                                                    </div>
+                                                    <div className="table-data">
+                                                        <input
+                                                            name="price"
+                                                            data-id={index}
+                                                            type="number"
+                                                            value={price}
+                                                            placeholder={price}
+                                                            readOnly = {true}
+                                                        />
+                                                    </div>
+                                                    <div className="table-data">
+                                                        <input
+                                                            name="category"
+                                                            data-id={index}
+                                                            type="text"
+                                                            value={category.category}
+                                                            placeholder={category.category}
+                                                            readOnly = {true}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> : null}
+                    </div>
+                    <span>&nbsp;&nbsp;</span>
+                    <div>
                         {(selectedCategory!=="") ?
                             <div>
-                                <div>
-                                    {/*<div>*/}
-                                    {/*    <div className="input-container">*/}
-                                    {/*        <label>Item </label>*/}
-                                    {/*        <input type="text"*/}
-                                    {/*               value={item.food}*/}
-                                    {/*               onChange={handleInput}*/}
-                                    {/*               name="food" required*/}
-                                    {/*               id = "food"/>*/}
-                                    {/*    </div>*/}
-                                    {/*    <div className="input-container">*/}
-                                    {/*        <label>List of ingredients </label>*/}
-                                    {/*        <input type="text"*/}
-                                    {/*               value={item.listOfIngredients}*/}
-                                    {/*               onChange={handleInput}*/}
-                                    {/*               name="listOfIngredients" required*/}
-                                    {/*               id = "listOfIngredients"/>*/}
-                                    {/*    </div>*/}
-                                    {/*    <div className="input-container">*/}
-                                    {/*        <label>Price </label>*/}
-                                    {/*        <input type="number"*/}
-                                    {/*               value={item.price}*/}
-                                    {/*               onChange={handleInput}*/}
-                                    {/*               name="price" required*/}
-                                    {/*               id = "price"/>*/}
-                                    {/*    </div>*/}
-                                    {/*    <div className="input-container">*/}
-                                    {/*        <label>Category </label>*/}
-                                    {/*        <input name="category"*/}
-                                    {/*               id="category"*/}
-                                    {/*               type="text"*/}
-                                    {/*               value={JSON.parse(localStorage.getItem('category')).name}*/}
-                                    {/*               placeholder={localStorage.getItem('category')}*/}
-                                    {/*               readOnly = {true}*/}
-                                    {/*               onChange={handleInput}/>*/}
-                                    {/*    </div>*/}
-                                    {/*</div>*/}
+                                You selected: {selectedCategory}
                                     <div className="table">
                                         <div className="table-title">Menu for the selected category</div>
                                         <div className="table-content">
@@ -182,6 +230,7 @@ function ViewMenu(){
                                             </div>
                                             <div className="table-body">
                                                     {items.map(({food, listOfIngredients, price, category}, index) => (
+                                                        (selectedCategory===category.category) ?
                                                             <div className="table-row" key={index}>
                                                                 <div className="table-data">
                                                                     <input
@@ -218,22 +267,19 @@ function ViewMenu(){
                                                                         name="category"
                                                                         data-id={index}
                                                                         type="text"
-                                                                        value={category}
-                                                                        placeholder={category}
+                                                                        value={category.category}
+                                                                        placeholder={category.category}
                                                                         readOnly = {true}
                                                                     />
                                                                 </div>
                                                             </div>
+                                                            : null
                                                         ))}
                                             </div>
                                         </div>
                                     </div>
-                                </div>
                             </div> : null}
                     </div>
-                </div>
-                <div className="button-container">
-                    <input type="submit"/>
                 </div>
                 <nav>
                     <span>&nbsp;&nbsp;</span>

@@ -25,6 +25,7 @@ function ViewMenuCustomer(){
         restaurant: ""
     });
     const [clickedViewAll, setClickedViewAll] = useState( false );
+    const [cartContent, setCartContent] = useState( [] );
 
     useEffect(() => {
         axios
@@ -56,6 +57,9 @@ function ViewMenuCustomer(){
             .catch((error) =>
                 console.error("There was an error!", error.response.data.message)
             );
+
+        console.log("******")
+        console.log(cartContent)
     }, []);
 
     const menu = localStorage.getItem('menu');
@@ -77,11 +81,6 @@ function ViewMenuCustomer(){
                 console.log(error);
             });
     },[menu]);
-
-
-    const errors = {
-        name: "invalid name",
-    };
 
     const handleClick = (event) => {
         setClickedViewAll(true);
@@ -197,6 +196,13 @@ function ViewMenuCustomer(){
                                                             readOnly = {true}
                                                         />
                                                     </div>
+                                                    <div className="table-data">
+                                                        <Button as={Col}
+                                                                variant="success"
+                                                                name={food}
+                                                                value={food}
+                                                                onChange={() => {setCartContent([...cartContent, food]);}}>Add to cart</Button>
+                                                    </div>
                                                 </div>
                                             ))}
                                         </div>
@@ -272,6 +278,13 @@ function ViewMenuCustomer(){
                                                                 readOnly = {true}
                                                             />
                                                         </div>
+                                                        <div className="table-data">
+                                                            <Button as={Col}
+                                                                    variant="success"
+                                                                    name={food}
+                                                                    value={food}
+                                                                    onChange={() => { setCartContent([...cartContent, food]); }}>Add to cart</Button>
+                                                        </div>
                                                     </div>
                                                     : null
                                             ))}
@@ -280,6 +293,21 @@ function ViewMenuCustomer(){
                                 </div>
                             </div> : null}
                     </div>
+                    <div>
+                        {(cartContent!==null) ?
+                        <div>
+                            Selected items:
+                            { cartContent.map(({ food }, index) => {
+                                return (
+                                    <div>
+                                        <li>{food}</li>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                        : null}
+                    </div>
+
                 </div>
                 <nav>
                     <span>&nbsp;&nbsp;</span>

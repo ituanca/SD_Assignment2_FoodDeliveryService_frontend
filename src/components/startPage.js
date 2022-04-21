@@ -10,7 +10,7 @@ import background from "../img/background2.jpg"
 function StartPage(){
         return (
             <div className="app">
-                <div style={{ backgroundImage: `url(${background})` }}>
+                <div className="login-form" style={{ backgroundImage: `url(${background})` }}>
                     <span>&nbsp;&nbsp;</span>
                     <div className='App'>
 
@@ -21,7 +21,7 @@ function StartPage(){
                             <span>&nbsp;&nbsp;</span>
 
                             <h2 className="text-center"><strong>Restaurant administrators</strong></h2>
-                            <h3 className="text-center">Are you the admin of a restaurant or do you want to become one?</h3>
+                            <h3 className="text-center">   Are you the admin of a restaurant or do you want to become one?   </h3>
 
                             <Link to="/LogInAdmin">
                                 <Button as={Col} variant="primary">Log in </Button>

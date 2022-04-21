@@ -5,7 +5,6 @@ import {Link, Outlet} from "react-router-dom";
 import {Button} from "react-bootstrap";
 import {Col} from "reactstrap";
 import axios from "axios";
-import background from "../img/background2.jpg"
 
 function LogInAdmin(){
 

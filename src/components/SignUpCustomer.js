@@ -30,7 +30,8 @@ function SignUpCustomer(){
 
     const errors = {
         username: "username already exists",
-        email: "email already exists"
+        email: "email already exists",
+        invalid_email: "invalid email"
     };
 
     const handleInput = (event) => {
@@ -68,6 +69,9 @@ function SignUpCustomer(){
                 } else if (response.data === "email_exists"){
                     setErrorMessagesSC({name: "email", message: errors.email});
                     localStorage.removeItem("customer");
+                }  else if (response.data === "invalid_email"){
+                    setErrorMessagesSC({name: "invalid_email", message: errors.invalid_email});
+                    localStorage.removeItem("customer");
                 } else{
                     setIsSubmittedSC(true);
                     localStorage.setItem("customer", JSON.stringify(customerRegistration));
@@ -100,6 +104,7 @@ function SignUpCustomer(){
                            onChange={handleInput}
                            name="email" required id = "email"/>
                     {renderErrorMessage("email")}
+                    {renderErrorMessage("invalid_email")}
                 </div>
                 <div className="input-container">
                     <label>Username </label>
@@ -131,7 +136,7 @@ function SignUpCustomer(){
 
     return (
         <div className="app">
-            <div className="login-form">
+            <div className="login-form" style={{backgroundColor: 'lightgreen',}}>
                 <div className="title">Sign Up</div>
                 {isSubmittedSC ?
                     <div>
@@ -141,7 +146,7 @@ function SignUpCustomer(){
                         <span>&nbsp;&nbsp;</span>
                         <Link to="/CustomerActions">
                             <span>&nbsp;&nbsp;</span>
-                            <Button as={Col} variant="primary">Go to customer page</Button>
+                            <Button as={Col} variant="success">Go to customer page</Button>
                         </Link>
                     </div>
                     : renderForm}

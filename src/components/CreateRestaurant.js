@@ -35,6 +35,7 @@ function CreateRestaurant(){
             .catch((error) => {
                 console.log(error);
             });
+        console.log(zones)
     }, []);
 
     const errors = {

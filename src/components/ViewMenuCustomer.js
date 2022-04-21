@@ -37,13 +37,13 @@ function ViewMenuCustomer(){
                 console.log(error);
             });
 
-        const admin = JSON.parse(localStorage.getItem('admin'));
-        console.log(admin);
+        const restaurant = JSON.parse(localStorage.getItem("restaurant"));
+        console.log(restaurant);
 
         axios
-            .get("http://localhost:8080/assignment2/restaurant/findMenuByAdmin", {
+            .get("http://localhost:8080/assignment2/restaurant/findMenuByRestaurant", {
                 params:{
-                    admin: admin.username
+                    name: restaurant
                 }
             })
             .then((response) => {
@@ -295,7 +295,8 @@ function ViewMenuCustomer(){
         <div className="app">
             <span>&nbsp;&nbsp;</span>
             <div className="login-form">
-                <div className="title">View menu</div>
+                <h3 className="text-center">{JSON.parse(localStorage.getItem("restaurant"))}</h3>
+                <h4 className="text-center">Menu</h4><span>&nbsp;&nbsp;</span>
                 {renderForm}
                 <Outlet />
             </div>

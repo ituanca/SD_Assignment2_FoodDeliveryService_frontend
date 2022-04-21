@@ -13,12 +13,7 @@ function ViewRestaurants(){
 
     const [selectedRestaurant, setSelectedRestaurant] = useState( "" );
     const [restaurants, setRestaurants] = useState([]);
-    const [restaurant, setRestaurant] = useState({
-        name: "",
-        address: "",
-        zones: {},
-        admin: []
-    });
+    const [disable, setDisable] = React.useState(true);
 
 
     useEffect(() => {
@@ -37,17 +32,20 @@ function ViewRestaurants(){
 
     }, []);
 
-
-    const errors = {
-        name: "invalid name",
-    };
-
-
     const handleClick = (event) => {
         setSelectedRestaurant(event.target.name);
+        //setDisable(false)
+        //console.log(selectedRestaurant)
         localStorage.setItem("restaurant", JSON.stringify(event.target.name));
-        console.log(localStorage.getItem("restaurant"))
+        // console.log(localStorage.getItem("restaurant"))
     }
+
+    useEffect( () => {
+        //console.log(selectedRestaurant)
+        if(selectedRestaurant){
+            setDisable(false)
+        }
+    },[selectedRestaurant])
 
     const section = Math.ceil(restaurants.length / 5);
     const firstSection = restaurants.slice(0, section)
@@ -199,6 +197,10 @@ function ViewRestaurants(){
 
                 </div>
                 <nav>
+                    <span>&nbsp;&nbsp;</span>
+                    <Link to="/ViewMenuCustomer">
+                        <Button as={Col} variant="success" disabled={disable}>View menu for the selected restaurant</Button>
+                    </Link>
                     <span>&nbsp;&nbsp;</span>
                     <Link to="/CustomerActions">
                         <Button as={Col} variant="outline-dark">Go back</Button>

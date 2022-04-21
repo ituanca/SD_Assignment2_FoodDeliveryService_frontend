@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import './App.css';
 
 import StartPage from "./components/startPage";
-
+import background from "./img/background2.jpg"
 
 class App extends React.Component {
 

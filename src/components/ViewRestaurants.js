@@ -213,8 +213,8 @@ function ViewRestaurants(){
     return (
         <div className="app">
             <span>&nbsp;&nbsp;</span>
-            <div className="login-form">
-                <div className="title">View restaurants</div>
+            <div className="login-form" style={{backgroundColor: 'lightgreen',}}>
+                <h3 className="text-center">Restaurants</h3>
                 {renderForm}
                 <Outlet />
             </div>

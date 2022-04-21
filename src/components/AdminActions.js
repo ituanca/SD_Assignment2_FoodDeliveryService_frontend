@@ -10,7 +10,7 @@ function AdminActions(){
     return (
         <div className="app">
             <span>&nbsp;&nbsp;</span>
-            <div className="login-form">
+            <div className="login-form" style={{backgroundColor: 'lightblue',}}>
                 <div className="title">Admin</div>
                 <div>
                     <span>&nbsp;&nbsp;</span>

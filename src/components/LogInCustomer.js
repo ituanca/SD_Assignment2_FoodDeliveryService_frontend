@@ -124,7 +124,7 @@ function LogInCustomer(){
 
     return (
             <div className="app">
-                <div className="login-form">
+                <div className="login-form"  style={{backgroundColor: 'lightgreen',}}>
                     <div className="title">Sign In</div>
                     {isSubmittedC ?
                         <div>

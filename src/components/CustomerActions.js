@@ -10,7 +10,7 @@ function CustomerActions(){
     return (
         <div className="app">
             <span>&nbsp;&nbsp;</span>
-            <div className="login-form">
+            <div className="login-form" style={{backgroundColor: 'lightgreen',}}>
                 <div className="title">Customer</div>
                 <div>
 

@@ -5,7 +5,7 @@ import {Link, Outlet} from "react-router-dom";
 import {Button} from "react-bootstrap";
 import {Col} from "reactstrap";
 import axios from "axios";
-
+import background from "../img/background2.jpg"
 
 function LogInAdmin(){
 
@@ -96,23 +96,23 @@ function LogInAdmin(){
 
         return (
             <div className="app">
-                <div className="login-form">
-                    <div className="title">Sign In</div>
-                    {isSubmitted ?
-                        <div>
+                    <div className="login-form" style={{backgroundColor: 'lightblue',}}>
+                        <div className="title">Sign In</div>
+                        {isSubmitted ?
                             <div>
-                                Admin has successfully logged in
+                                <div>
+                                    Admin has successfully logged in
+                                    <span>&nbsp;&nbsp;</span>
+                                </div>
                                 <span>&nbsp;&nbsp;</span>
+                                <Link to="/AdminActions">
+                                    <span>&nbsp;&nbsp;</span>
+                                    <Button as={Col} variant="primary">Go to admin page</Button>
+                                </Link>
                             </div>
-                            <span>&nbsp;&nbsp;</span>
-                            <Link to="/AdminActions">
-                                <span>&nbsp;&nbsp;</span>
-                                <Button as={Col} variant="primary">Go to admin page</Button>
-                            </Link>
-                        </div>
-                        : renderForm}
-                    <Outlet />
-                </div>
+                            : renderForm}
+                        <Outlet />
+                    </div>
             </div>
         );
 }

@@ -186,7 +186,7 @@ function CreateRestaurant(){
 
     return (
         <div className="app">
-            <div className="login-form">
+            <div className="login-form" style={{backgroundColor: 'lightblue',}}>
                 <div className="title">Create restaurant</div>
                 {isSubmittedR ?
                     <div>

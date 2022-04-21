@@ -26,7 +26,6 @@ function ViewMenuCustomer(){
     });
     const [clickedViewAll, setClickedViewAll] = useState( false );
 
-
     useEffect(() => {
         axios
             .get("http://localhost:8080/assignment2/category/index")
@@ -57,10 +56,12 @@ function ViewMenuCustomer(){
             .catch((error) =>
                 console.error("There was an error!", error.response.data.message)
             );
+    }, []);
 
-        const menu = localStorage.getItem('menu');
-        console.log(menu);
+    const menu = localStorage.getItem('menu');
+    console.log(menu);
 
+    useEffect(() => {
         axios
             .get("http://localhost:8080/assignment2/food/findByMenu",{
                 params:{
@@ -75,8 +76,7 @@ function ViewMenuCustomer(){
             .catch((error) => {
                 console.log(error);
             });
-
-    }, []);
+    },[menu]);
 
 
     const errors = {
@@ -103,7 +103,7 @@ function ViewMenuCustomer(){
         <div className="form">
             <form>
                 <div>
-                    <Button as={Col} variant="primary" onClick={handleClick}>View the entire menu</Button>
+                    <Button as={Col} variant="success" onClick={handleClick}>View the entire menu</Button>
                 </div>
                 <span>&nbsp;&nbsp;</span>
                 <h5>Or choose one category:</h5>
@@ -294,7 +294,7 @@ function ViewMenuCustomer(){
     return (
         <div className="app">
             <span>&nbsp;&nbsp;</span>
-            <div className="login-form">
+            <div className="login-form" style={{backgroundColor: 'lightgreen',}}>
                 <h3 className="text-center">{JSON.parse(localStorage.getItem("restaurant"))}</h3>
                 <h4 className="text-center">Menu</h4><span>&nbsp;&nbsp;</span>
                 {renderForm}

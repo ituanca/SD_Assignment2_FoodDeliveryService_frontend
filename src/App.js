@@ -13,7 +13,6 @@ class App extends React.Component {
         return (
             <div>
                 {/*{navbarInstance}*/}
-                <span>&nbsp;&nbsp;</span>
                 <div className='App'>
                     <StartPage />
                 </div>

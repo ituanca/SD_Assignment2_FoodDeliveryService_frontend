@@ -7,7 +7,6 @@ import {Col} from "reactstrap";
 import axios from "axios";
 import "@reach/combobox/styles.css";
 import "./tableOfFoods.css";
-import { List, Datagrid, TextField, DateField, BooleanField } from 'react-admin';
 
 function ViewRestaurants(){
 

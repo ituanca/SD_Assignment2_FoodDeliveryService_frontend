@@ -27,14 +27,7 @@ function CreateMenu(){
     });
 
     useEffect(() => {
-        // fetch('http://localhost:8080/assignment2/category/index')
-        //     .then((response) => response.json())
-        //     .then((json) => {
-        //         setCategories(json);
-        //     })
-        //     .catch((error) => {
-        //         console.log(error);
-        //     });
+
         axios
             .get("http://localhost:8080/assignment2/category/index")
             .then((response) => {

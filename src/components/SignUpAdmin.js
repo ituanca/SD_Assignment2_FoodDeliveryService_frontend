@@ -30,10 +30,14 @@ function SignUpAdmin(){
         event.preventDefault();
 
         axios
-            .post('http://localhost:8080/assignment2/admin/checkIfExists', adminRegistration)
+            .get('http://localhost:8080/assignment2/admin/checkIfExists', {
+                params: {
+                    username: adminRegistration.username
+                }
+            })
             .then((response) => {
                 console.info(response);
-                if (response.data === false) {
+                if (response.data === true) {
                     setErrorMessagesAS({name: "username", message: errors.username});
                     localStorage.removeItem("admin");
                 } else {

@@ -47,7 +47,7 @@ function CreateRestaurant(){
         event.preventDefault();
 
             axios
-                .post('http://localhost:8080/assignment2/restaurant/createBoolean', restaurantRegistration)
+                .post('http://localhost:8080/assignment2/restaurant/create', restaurantRegistration)
                 .then((response) => {
                     console.info(response);
                     if (response.data === false) {

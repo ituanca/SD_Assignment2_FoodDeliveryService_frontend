@@ -14,17 +14,9 @@ function ViewMenu(){
     const [categories, setCategories] = useState( [] );
     const [selectedCategory, setSelectedCategory] = useState( "" );
     const [items, setItems] = useState([]);
-    const [item, setItem] = useState({
-        food: "",
-        listOfIngredients: "",
-        price: 0,
-        category: {
-            id: 0,
-            category: ""
-        },
-        restaurant: ""
-    });
     const [clickedViewAll, setClickedViewAll] = useState( false );
+    const [successfulPdfGeneration, setSuccessfulPdfGeneration] = useState( "" );
+    const [disable, setDisable] = React.useState(false);
 
 
     useEffect(() => {
@@ -61,7 +53,7 @@ function ViewMenu(){
     }, []);
 
     const menu = localStorage.getItem('menu');
-    console.log(menu);
+    console.log(menu)
 
     useEffect(() => {
         axios
@@ -101,6 +93,25 @@ function ViewMenu(){
         //console.log(localStorage.getItem("category"))
     }
 
+    const handleClickPDF = (event) => {
+        event.preventDefault();
+            axios
+                .get("http://localhost:8080/assignment2/restaurant/generatePdf", {
+                    params:{
+                        menu: menu
+                    }
+                })
+                .then((response) => {
+                    if(response.data===true){
+                        setSuccessfulPdfGeneration('PDF was successfully generated!')
+                        console.log(successfulPdfGeneration.toString())
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+    }
+
     const renderForm = (
         <div className="form">
             <form>
@@ -112,7 +123,7 @@ function ViewMenu(){
                 <span>&nbsp;&nbsp;</span>
                 <div className="radio">
                     <div className="row">
-                        { categories.map(({ id, category }, index) => {
+                        { categories.map(({ category }, index) => {
                             return (
                                 <div>
                                     <div className="col">
@@ -121,7 +132,7 @@ function ViewMenu(){
                                                 <input
                                                     type="radio"
                                                     name={category}
-                                                    value={id}
+                                                    value={category}
                                                     checked={selectedCategory === category}
                                                 />
                                                 <label htmlFor={`custom-checkbox-${index}`}>{category}</label>
@@ -203,6 +214,15 @@ function ViewMenu(){
                                             ))}
                                         </div>
                                     </div>
+                                </div>
+                                <div>
+                                    <Button as={Col} variant="primary" onClick={handleClickPDF}>Generate PDF</Button>
+                                </div>
+                                <div>
+                                    {(successfulPdfGeneration!=="") ?
+                                        <div>
+                                            {successfulPdfGeneration}
+                                        </div> : null}
                                 </div>
                             </div> : null}
                     </div>

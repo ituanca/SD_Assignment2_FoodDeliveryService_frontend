@@ -11,12 +11,15 @@ function SignUpAdmin(){
     const [errorMessagesAS, setErrorMessagesAS] = useState({});
     const [isSubmittedAS, setIsSubmittedAS] = useState(false);
     const [adminRegistration, setAdminRegistration] = useState({
+        email: "",
         username: "",
         password: ""
     });
 
     const errors = {
         username: "username already exists",
+        email: "email already exists",
+        invalid_email: "invalid email"
     };
 
     const handleInput = (event) => {
@@ -30,25 +33,51 @@ function SignUpAdmin(){
         event.preventDefault();
 
         axios
-            .get('http://localhost:8080/assignment2/admin/checkIfExists', {
+            .get('http://localhost:8080/assignment2/admin/checkIfValid', {
                 params: {
+                    email: adminRegistration.email,
                     username: adminRegistration.username
                 }
             })
             .then((response) => {
                 console.info(response);
-                if (response.data === true) {
+                if (response.data === "username_exists") {
                     setErrorMessagesAS({name: "username", message: errors.username});
                     localStorage.removeItem("admin");
-                } else {
+                } else if (response.data === "email_exists"){
+                    setErrorMessagesAS({name: "email", message: errors.email});
+                    localStorage.removeItem("admin");
+                }  else if (response.data === "invalid_email"){
+                    setErrorMessagesAS({name: "invalid_email", message: errors.invalid_email});
+                    localStorage.removeItem("admin");
+                } else{
                     setIsSubmittedAS(true);
                     localStorage.setItem("admin", JSON.stringify(adminRegistration));
                 }
-                //localStorage.setItem('admin', JSON.stringify(response.data));
             })
             .catch((error) => {
                 console.error("There was an error!", error.response.data.message)
             });
+
+        // axios
+        //     .get('http://localhost:8080/assignment2/admin/checkIfEmailExists', {
+        //         params: {
+        //             email: adminRegistration.email
+        //         }
+        //     })
+        //     .then((response) => {
+        //         console.info(response);
+        //         if (response.data === true) {
+        //             setErrorMessagesAS({name: "email", message: errors.email});
+        //             localStorage.removeItem("admin");
+        //         } else {
+        //             setIsSubmittedAS(true);
+        //             localStorage.setItem("admin", JSON.stringify(adminRegistration));
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         console.error("There was an error!", error.response.data.message)
+        //     });
     }
 
     const renderErrorMessage = (name) =>
@@ -59,6 +88,15 @@ function SignUpAdmin(){
     const renderForm = (
         <div className="form">
             <form onSubmit = {handleSubmit}>
+                <div className="input-container">
+                    <label>Email </label>
+                    <input type="text"
+                           value={adminRegistration.email}
+                           onChange={handleInput}
+                           name="email" required id = "email"/>
+                    {renderErrorMessage("email")}
+                    {renderErrorMessage("invalid_email")}
+                </div>
                 <div className="input-container">
                     <label>Username </label>
                     <input type="text"

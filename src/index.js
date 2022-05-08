@@ -16,6 +16,7 @@ import ViewMenu from "./components/ViewMenu";
 import CustomerActions from "./components/CustomerActions";
 import ViewRestaurants from "./components/ViewRestaurants";
 import ViewMenuCustomer from "./components/ViewMenuCustomer";
+import OrderCustomer from "./components/OrderCustomer";
 
 
 // ReactDOM.render(
@@ -44,6 +45,7 @@ render(
                 <Route path="/CustomerActions" element={<CustomerActions />} />
                 <Route path="/ViewRestaurants" element={<ViewRestaurants />} />
                 <Route path="/ViewMenuCustomer" element={<ViewMenuCustomer />} />
+                <Route path="/OrderCustomer" element={<OrderCustomer />} />
         </Routes>
         {/*<App />*/}
     </BrowserRouter>,

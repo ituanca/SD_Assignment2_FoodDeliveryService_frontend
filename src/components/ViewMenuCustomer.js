@@ -14,18 +14,10 @@ function ViewMenuCustomer(){
     const [categories, setCategories] = useState( [] );
     const [selectedCategory, setSelectedCategory] = useState( "" );
     const [items, setItems] = useState([]);
-    const [item, setItem] = useState({
-        food: "",
-        listOfIngredients: "",
-        price: 0,
-        category: {
-            id: 0,
-            category: ""
-        },
-        restaurant: ""
-    });
     const [clickedViewAll, setClickedViewAll] = useState( false );
-    const [cartContent, setCartContent] = useState( [] );
+    const [cartContent, setCartContent] = useState([] );
+    const [prices, setPrices] = useState([]);
+    const [totalPrice, setTotalPrice] = useState(0);
 
     useEffect(() => {
         axios
@@ -58,8 +50,6 @@ function ViewMenuCustomer(){
                 console.error("There was an error!", error.response.data.message)
             );
 
-        console.log("******")
-        console.log(cartContent)
     }, []);
 
     const menu = localStorage.getItem('menu');
@@ -82,7 +72,7 @@ function ViewMenuCustomer(){
             });
     },[menu]);
 
-    const handleClick = (event) => {
+    const handleClick = () => {
         setClickedViewAll(true);
         setSelectedCategory("");
     }
@@ -95,7 +85,20 @@ function ViewMenuCustomer(){
 
     const saveCategory = () =>  {
         localStorage.setItem("category", JSON.stringify(selectedCategory));
-        //console.log(localStorage.getItem("category"))
+    }
+
+    const handleAddToCart = (food, price) => {
+        setCartContent([...cartContent, food]);
+        console.log(cartContent)
+        setPrices([...prices, price]);
+        console.log(prices)
+        setTotalPrice(totalPrice + price)
+        console.log(totalPrice)
+    }
+
+    const handlePlaceOrder = () => {
+        localStorage.setItem("cart", JSON.stringify(cartContent));
+        localStorage.setItem("totalPrice", JSON.stringify(totalPrice));
     }
 
     const renderForm = (
@@ -201,7 +204,7 @@ function ViewMenuCustomer(){
                                                                 variant="success"
                                                                 name={food}
                                                                 value={food}
-                                                                onChange={() => {setCartContent([...cartContent, food]);}}>Add to cart</Button>
+                                                                onClick={() => handleAddToCart(food, price) }>Add to cart</Button>
                                                     </div>
                                                 </div>
                                             ))}
@@ -283,7 +286,7 @@ function ViewMenuCustomer(){
                                                                     variant="success"
                                                                     name={food}
                                                                     value={food}
-                                                                    onChange={() => { setCartContent([...cartContent, food]); }}>Add to cart</Button>
+                                                                    onClick={() => handleAddToCart(food, price) }>Add to cart</Button>
                                                         </div>
                                                     </div>
                                                     : null
@@ -294,23 +297,31 @@ function ViewMenuCustomer(){
                             </div> : null}
                     </div>
                     <div>
-                        {(cartContent!==null) ?
-                        <div>
-                            Selected items:
-                            { cartContent.map(({ food }, index) => {
-                                return (
-                                    <div>
-                                        <li>{food}</li>
-                                    </div>
-                                );
-                            })}
-                        </div>
+                        {(cartContent.length!==0) ?
+                            <div>
+                                <div>
+                                    Selected items:
+                                    <ul>
+                                        {cartContent.map(
+                                            function(food, index) {
+                                                return <li key={index}> {food} </li>;
+                                            })}
+                                    </ul>
+                                </div>
+                                <div>
+                                    <nav>
+                                        <Link to="/OrderCustomer">
+                                            <Button as={Col} variant="success" onClick={handlePlaceOrder}>Next</Button>
+                                        </Link>
+                                        <span>&nbsp;&nbsp;</span>
+                                    </nav>
+                                </div>
+                            </div>
                         : null}
                     </div>
 
                 </div>
                 <nav>
-                    <span>&nbsp;&nbsp;</span>
                     <Link to="/ViewRestaurants">
                         <Button as={Col} variant="outline-dark">Go back</Button>
                     </Link>

@@ -13,7 +13,6 @@ function CreateRestaurant(){
 
     const [errorMessagesR, setErrorMessagesR] = useState({});
     const [isSubmittedR, setIsSubmittedR] = useState(false);
-    const [existentRestaurants, setExistentRestaurants] = useState( [] );
     const [restaurantRegistration, setRestaurantRegistration] = useState({
         name: "",
         address: "",
@@ -64,6 +63,8 @@ function CreateRestaurant(){
                 });
 
     };
+
+    console.log(localStorage.getItem("admin"))
 
     const handleInput = (event) => {
         const name = event.target.name;

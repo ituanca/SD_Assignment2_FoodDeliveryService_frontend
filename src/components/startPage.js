@@ -1,11 +1,8 @@
 import React from "react";
-import {Link, BrowserRouter, Route, Outlet, Router} from "react-router-dom";
+import {Link, Outlet} from "react-router-dom";
 import {Button} from "react-bootstrap";
-import ReactDOM from "react-dom";
 import {Col} from "reactstrap";
-import LogInAdmin from "./LogInAdmin";
-import LogInCustomer from "./LogInCustomer";
-import background from "../img/background2.jpg"
+import background from "../img/background2.jpg";
 
 function StartPage(){
         return (

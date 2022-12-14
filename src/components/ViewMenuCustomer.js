@@ -52,8 +52,7 @@ function ViewMenuCustomer(){
 
     }, []);
 
-    const menu = localStorage.getItem('menu');
-    console.log(menu);
+    const menu = JSON.parse(localStorage.getItem('menu'));
 
     useEffect(() => {
         axios

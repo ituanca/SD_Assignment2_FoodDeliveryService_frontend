@@ -16,10 +16,10 @@ function LogInAdmin(){
         password: ""
     });
 
-        const errors = {
-            uname: "invalid username",
-            pass: "invalid password",
-        };
+    const errors = {
+        uname: "invalid username",
+        pass: "invalid password",
+    };
 
     const handleInput = (event) => {
         const name = event.target.name;

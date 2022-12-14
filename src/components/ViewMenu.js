@@ -16,7 +16,6 @@ function ViewMenu(){
     const [items, setItems] = useState([]);
     const [clickedViewAll, setClickedViewAll] = useState( false );
     const [successfulPdfGeneration, setSuccessfulPdfGeneration] = useState( "" );
-    const [disable, setDisable] = React.useState(false);
 
 
     useEffect(() => {
@@ -52,8 +51,7 @@ function ViewMenu(){
 
     }, []);
 
-    const menu = localStorage.getItem('menu');
-    console.log(menu)
+    const menu = JSON.parse(localStorage.getItem('menu'));
 
     useEffect(() => {
         axios
